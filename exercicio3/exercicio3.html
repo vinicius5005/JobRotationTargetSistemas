@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado Exercicio 3</title>
+</head>
+<body>
+   <table>
+     <tr>
+       <td>Menor faturamento diário:</td>
+       <td id="menorFaturamento"></td>
+     </tr>
+     <tr>
+       <td>Maior faturamento diário:</td>
+       <td id="maiorFaturamento"></td>
+     </tr>
+     <tr>
+       <td>Número de dias com faturamento diário acima da média mensal:</td>
+       <td id="qtdDiasAcimaMedia"></td>
+     </tr>
+   </table>
+
+   <script>
+     let dados;
+     let faturamentoTotal = 0;
+     let mediaMensal = 0;
+     let qtdDiasAcimaMedia = 0;
+     let menorFaturamentoDiario = Infinity;
+     let maiorFaturamentoDiario = -Infinity;
+
+     fetch("dados.json")
+       .then(response => response.json())
+       .then(json => {
+         dados = json;
+
+         for (let i = 0; i < dados.length; i++) {
+           const valor = dados[i].valor;
+
+           if (valor !== 0) {
+             faturamentoTotal += valor;
+
+             if (valor > maiorFaturamentoDiario) {
+               maiorFaturamentoDiario = valor;
+             }
+
+             if (valor < menorFaturamentoDiario) {
+               menorFaturamentoDiario = valor;
+             }
+
+             mediaMensal = faturamentoTotal / (i + 1);
+           }
+         }
+
+         for (let i = 0; i < dados.length; i++) {
+           const valor = dados[i].valor;
+           
+           if (valor !== 0 && valor > mediaMensal) {
+             qtdDiasAcimaMedia++;
+           }
+         }
+         
+         document.getElementById("menorFaturamento").textContent = `R$ ${menorFaturamentoDiario}`;
+         document.getElementById("maiorFaturamento").textContent = `R$ ${maiorFaturamentoDiario}`;
+         document.getElementById("qtdDiasAcimaMedia").textContent = `${qtdDiasAcimaMedia}`;
+       });
+   </script>
+</body>
+</html>
